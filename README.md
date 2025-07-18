@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16096831.svg)](https://doi.org/10.5281/zenodo.16096831)
+
 # 🔢 Codex: A Symbolic Compression Engine
 
 **Author**: MUSHIKARATI  
@@ -56,14 +58,8 @@ It outperforms classical compressors (like Gzip) in entropy efficiency across a 
 If you use or cite this work, attribute as:
 
 > Codex symbolic compression engine by **MUSHIKARATI**, 2025.  
-> [GitHub Repository](https://github.com/YourUsernameHere/CODEX)  
+> [GitHub Repository](https://github.com/MUSHIKARATI/CODEX)  
 > Licensed under the MIT License.
-
+Mushikarati. (2025). Codex Compression Engine — Mathematical Foundations (v1.0) [Software]. Zenodo. https://doi.org/10.5281/zenodo.16096831
 ---
-
-## 🛠️ Future Directions
-
-- Layered symbolic grammars  
-- Compression-based symbolic AI  
-- Hardware-efficient Codex interpreters
 
