@@ -1,0 +1,71 @@
+name: Compression Tests
+
+on:
+  push:
+    branches: [ main, claude/** ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.9', '3.10', '3.11']
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install package
+      run: |
+        pip install -e .
+
+    - name: Run tests
+      run: |
+        python -m unittest discover tests -v
+
+    - name: Test imports
+      run: |
+        python -c "from codex import get_engine, list_engines; print('✓ Imports OK')"
+        python -c "from codex import get_engine; e = get_engine('codex'); print(f'✓ Engine loaded: {e.name}')"
+
+  integrity-check:
+    name: Compression Integrity Tests
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install package
+      run: pip install -e .
+
+    - name: Test compression integrity
+      run: |
+        python << 'EOF'
+        from codex import get_engine
+
+        # Test all registered engines
+        for engine_name in ['codex', 'gzip']:
+            engine = get_engine(engine_name)
+            test_data = b"Integrity test data: Hello World!" * 100
+
+            result = engine.compress(test_data)
+            decomp = engine.decompress(result.compressed_data)
+
+            assert decomp.decompressed_data == test_data, f"{engine_name} integrity check failed!"
+            print(f"✓ {engine_name}: Integrity verified")
+            print(f"  Compression ratio: {result.compression_ratio:.2%}")
+
+        print("\n✓ All integrity checks passed!")
+        EOF

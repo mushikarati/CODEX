@@ -1,0 +1,81 @@
+name: Performance Regression Check
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  regression-test:
+    name: Check for Performance Regressions
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout PR branch
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install package
+      run: pip install -e .
+
+    - name: Benchmark PR version
+      id: pr-bench
+      run: |
+        python << 'EOF' | tee pr_benchmark.txt
+        from codex import get_engine
+
+        test_data = b"Performance regression test" * 500
+
+        for engine_name in ['gzip', 'codex']:
+            engine = get_engine(engine_name)
+            metrics = engine.benchmark(test_data)
+
+            print(f"{engine_name}:")
+            print(f"  ratio={metrics['compression_ratio']:.4f}")
+            print(f"  compress_mbps={metrics['throughput_compress_mbps']:.2f}")
+            print(f"  decompress_mbps={metrics['throughput_decompress_mbps']:.2f}")
+        EOF
+
+    - name: Checkout main branch
+      run: |
+        git fetch origin main
+        git checkout main
+
+    - name: Install main version
+      run: pip install -e . --force-reinstall
+
+    - name: Benchmark main version
+      id: main-bench
+      run: |
+        python << 'EOF' | tee main_benchmark.txt
+        from codex import get_engine
+
+        test_data = b"Performance regression test" * 500
+
+        for engine_name in ['gzip', 'codex']:
+            try:
+                engine = get_engine(engine_name)
+                metrics = engine.benchmark(test_data)
+
+                print(f"{engine_name}:")
+                print(f"  ratio={metrics['compression_ratio']:.4f}")
+                print(f"  compress_mbps={metrics['throughput_compress_mbps']:.2f}")
+                print(f"  decompress_mbps={metrics['throughput_decompress_mbps']:.2f}")
+            except Exception as e:
+                print(f"{engine_name}: Not available in main yet ({e})")
+        EOF
+
+    - name: Compare results
+      run: |
+        echo "Performance Comparison: PR vs Main"
+        echo "===================================="
+        echo "PR Branch:"
+        cat pr_benchmark.txt
+        echo ""
+        echo "Main Branch:"
+        cat main_benchmark.txt
+        echo ""
+        echo "Note: Large regressions should be investigated"

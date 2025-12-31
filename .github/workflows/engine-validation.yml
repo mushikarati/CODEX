@@ -1,0 +1,79 @@
+name: Engine Validation
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'codex/engines/**'
+
+jobs:
+  validate-new-engine:
+    name: Validate Engine Implementation
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install package
+      run: pip install -e .
+
+    - name: Check engine registration
+      run: |
+        python << 'EOF'
+        from codex import list_engines
+
+        engines = list_engines()
+        print(f"Found {len(engines)} registered engine(s):")
+        for eng in engines:
+            print(f"  • {eng['name']} v{eng['version']}: {eng['description']}")
+
+        assert len(engines) > 0, "No engines registered!"
+        print("\n✓ Engine registration OK")
+        EOF
+
+    - name: Validate engine interface
+      run: |
+        python << 'EOF'
+        from codex import get_engine, list_engines
+        from codex.engines.base import CompressionEngine
+
+        # Test each engine
+        for engine_info in list_engines():
+            engine_name = engine_info['name'].lower()
+            print(f"\nValidating {engine_name}...")
+
+            # Get engine
+            engine = get_engine(engine_name)
+
+            # Check it's a CompressionEngine
+            assert isinstance(engine, CompressionEngine), \
+                f"{engine_name} must inherit from CompressionEngine"
+
+            # Check required properties
+            assert hasattr(engine, 'name'), f"{engine_name} missing 'name' property"
+            assert hasattr(engine, 'version'), f"{engine_name} missing 'version' property"
+            assert hasattr(engine, 'description'), f"{engine_name} missing 'description' property"
+
+            # Check methods
+            assert hasattr(engine, 'compress'), f"{engine_name} missing 'compress' method"
+            assert hasattr(engine, 'decompress'), f"{engine_name} missing 'decompress' method"
+
+            # Try compression
+            test_data = b"Test validation data"
+            result = engine.compress(test_data)
+
+            # Verify result structure
+            assert hasattr(result, 'compressed_data')
+            assert hasattr(result, 'compression_ratio')
+            assert hasattr(result, 'original_size')
+            assert hasattr(result, 'compressed_size')
+
+            print(f"  ✓ {engine_name} passes interface validation")
+
+        print("\n✓ All engines validated!")
+        EOF
