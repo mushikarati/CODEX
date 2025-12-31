@@ -1,0 +1,11 @@
+# Codex Compression Framework
+# No external dependencies required for core functionality
+# Python 3.8+ standard library is sufficient
+
+# Development dependencies (optional)
+# Uncomment if needed for development:
+# pytest>=7.0
+# pytest-cov>=3.0
+# black>=22.0
+# flake8>=4.0
+# mypy>=0.950
