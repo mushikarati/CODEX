@@ -1,0 +1,13 @@
+FUNCTIONAL 3-AXIS COORDINATES (Spiral/Ring Geometry)
+
+⚫ Black    ( 0.5,  0.0, −1.0 )   Bottom sink / Torsional cut
+⚪ White    ( 1.0,  0.0,  0.0 )   Right anchor / Lever fulcrum  
+🟡 Yellow   ( 0.5,  0.87, 0.0 )   Front ignition / Wedge expansion
+🟤 Brown    (−0.43, 0.75, 0.5 )   Up-right redirect / Pulley turn
+🔴 Red      (−0.5,  0.87, 0.87)   Top pulse / Radiative peak
+🟢 Green    (−0.43,−0.75, 0.5 )   Left-down return / Wheel couple
+🔵 Blue     ( 0.5, −0.87, 0.0 )   Right-back reflection / Spring
+🟠 Orange   ( 0.0,  0.0,  2.0 )   Above-all / Incompressible shard
+
+The path: Black → White → Yellow → Brown → Red → Green → Blue → Black
+forms a rising-then-falling helix — thermodynamic breathing made spatial.
