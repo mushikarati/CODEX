@@ -24,6 +24,15 @@ from .tokens import (
     CODEXTokenSystem
 )
 
+from .kairos import (
+    KairosMode,
+    GrayThreat,
+    KairosEngine,
+    validate_sequence,
+    repair_sequence,
+    is_adjacent
+)
+
 __all__ = [
     'calculate_shannon_entropy',
     'calculate_symbolic_entropy',
@@ -38,4 +47,10 @@ __all__ = [
     'OperatorToken',
     'SpecialToken',
     'CODEXTokenSystem',
+    'KairosMode',
+    'GrayThreat',
+    'KairosEngine',
+    'validate_sequence',
+    'repair_sequence',
+    'is_adjacent',
 ]

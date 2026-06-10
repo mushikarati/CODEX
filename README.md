@@ -20,11 +20,15 @@ It outperforms classical compressors (like Gzip) in entropy efficiency across a 
 
 - **Token Compression**: Recursively rewrites symbol structures via morphic rules.
 - **Entropy Minimization**: Uses symbolic entropy metrics rather than byte-frequency histograms.
+- **Symbolic Dynamics**: Full t-god implementation with F/R/T-chain operators
+- **KAIROS System**: Adjacency law enforcement and Gray detection
 - **Mathematical Foundations**:  
   - 7-token PDA (Pushdown Automaton)  
+  - 17-token CODEX system (7 Magick + 4 Operator + 6 Special)
   - Category Theory morphisms  
   - Recursive homotopy rewrites  
   - Entropy control via symbolic invariants
+  - Adjacency law: ±1 mod 7 transitions only
 
 ---
 
@@ -40,6 +44,50 @@ It outperforms classical compressors (like Gzip) in entropy efficiency across a 
 - `Codex_Entropy_Simulation_Chart_10x50.jpeg`
 - `Codex vs Symbolic vs Gzip Compression.png`
 - `Codex_Compression_CheatSheet.md` for compression logic summary
+
+---
+
+## 🛠️ Available Tools
+
+### Compression Engines
+
+1. **Black LZW Screw** (`black_lzw_screw`)
+   - LZW compression with Black Gate wrapper
+   - CODEX token seals (⚫)
+   - MD5 integrity verification
+   - Full Unicode/UTF-8 support
+
+2. **Codex Engine** (`codex`)
+   - Symbolic compression engine
+   - Token-based compression
+
+3. **Gzip Baseline** (`gzip`)
+   - Standard gzip for comparison
+
+### Symbolic Dynamics
+
+- **t-god module**: Complete symbolic dynamics simulator
+- **KAIROS**: Adjacency law enforcement and Gray detection
+- **F/R/T-chain**: Core symbolic operators
+- **K-series repair**: K1 flush, K2 stabilize protocols
+
+### Command-Line Interface
+
+```bash
+# List engines
+python -m codex.cli --list
+
+# Compress with Black LZW Screw
+python -m codex.cli compress --engine black_lzw_screw input.txt
+
+# Run symbolic dynamics simulation
+python -m codex.cli simulate --steps 100 --entropy 0.45
+
+# Benchmark engine
+python -m codex.cli benchmark --engine black_lzw_screw input.txt
+```
+
+See [SYMBOLIC_DYNAMICS.md](docs/SYMBOLIC_DYNAMICS.md) for complete documentation.
 
 ---
 

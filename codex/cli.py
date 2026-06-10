@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Optional
 
 from . import get_engine, list_engines
+from .core import symbolic_dynamics
 
 
 def compress_file(engine_name: str, input_path: str, output_path: Optional[str] = None,
@@ -143,6 +144,88 @@ def show_engines() -> None:
     print("\n" + "=" * 60)
 
 
+def run_simulation(
+    initial_sequence: Optional[str] = None,
+    max_steps: int = 100,
+    initial_entropy: float = 0.45,
+    output_csv: Optional[str] = None
+) -> None:
+    """
+    Run CODEX symbolic dynamics simulation.
+
+    Args:
+        initial_sequence: Initial token sequence (e.g., 'KWYBRGUKWYBR')
+        max_steps: Maximum simulation steps
+        initial_entropy: Initial entropy H0
+        output_csv: Path to save CSV output
+    """
+    import random
+
+    # Parse initial sequence or use shuffled default
+    if initial_sequence:
+        # Parse sequence string into list
+        initial_M = list(initial_sequence.upper())
+    else:
+        # Use shuffled canonical sequence
+        seed = ["K", "W", "Y", "B", "R", "G", "U"]
+        random.seed(42)
+        initial_M = seed.copy()
+        random.shuffle(initial_M)
+
+    print("=" * 60)
+    print("CODEX Symbolic Dynamics Simulation")
+    print("=" * 60)
+    print(f"Initial sequence: {''.join(initial_M)}")
+    print(f"Initial entropy:  H0 = {initial_entropy:.4f}")
+    print(f"Max steps:        {max_steps}")
+    print("=" * 60)
+
+    # Run simulation
+    csv_path = Path(output_csv) if output_csv else Path("/tmp/codex_simulation.csv")
+    records = symbolic_dynamics.simulate(
+        initial_M=initial_M,
+        H0=initial_entropy,
+        max_steps=max_steps,
+        csv_path=csv_path
+    )
+
+    # Display results
+    print(f"\nSimulation complete! {len(records)} timesteps executed.\n")
+
+    # Show first few records
+    print("First 10 timesteps:")
+    print("-" * 80)
+    print(f"{'t':<4} {'M':<10} {'S':<10} {'C':<10} {'H':<8} {'ΔH':<8} {'Viol':<5} {'Gray'}")
+    print("-" * 80)
+
+    for r in records[:10]:
+        t = r['t']
+        M_str = ''.join(r.get('M', []))[:8]
+        S_str = ''.join(r.get('S', []))[:8]
+        C_str = ''.join(r.get('C', []))[:8]
+        H = r.get('H', 0)
+        dH = r.get('deltaH', 0)
+        viol = r.get('violations', 0)
+        gray = '⚠️' if r.get('gray', False) else ''
+
+        print(f"{t:<4} {M_str:<10} {S_str:<10} {C_str:<10} {H:<8.4f} {dH:<8.4f} {viol:<5} {gray}")
+
+    print("-" * 80)
+
+    # Show Gray events
+    gray_events = [r for r in records if r.get('gray', False)]
+    if gray_events:
+        print(f"\n⚠️  Gray Events Detected: {len(gray_events)}")
+        for event in gray_events:
+            print(f"  - Timestep {event['t']}: {event['violations']} violations, "
+                  f"H={event['H']:.4f}")
+    else:
+        print("\n✓ No Gray events detected")
+
+    print(f"\nCSV log saved to: {csv_path}")
+    print("=" * 60)
+
+
 def main():
     """Main CLI entry point."""
     parser = argparse.ArgumentParser(
@@ -186,6 +269,13 @@ Examples:
     benchmark_parser.add_argument('input', help='Input file path')
     benchmark_parser.add_argument('-e', '--engine', default='codex', help='Engine name (default: codex)')
 
+    # Simulate command
+    simulate_parser = subparsers.add_parser('simulate', help='Run symbolic dynamics simulation')
+    simulate_parser.add_argument('-s', '--sequence', help='Initial token sequence (e.g., KWYBRGUKWYBR)')
+    simulate_parser.add_argument('-n', '--steps', type=int, default=100, help='Max simulation steps (default: 100)')
+    simulate_parser.add_argument('-H', '--entropy', type=float, default=0.45, help='Initial entropy (default: 0.45)')
+    simulate_parser.add_argument('-o', '--output', help='CSV output path (default: /tmp/codex_simulation.csv)')
+
     args = parser.parse_args()
 
     try:
@@ -197,6 +287,13 @@ Examples:
             decompress_file(args.engine, args.input, args.output)
         elif args.command == 'benchmark':
             benchmark_engine(args.engine, args.input)
+        elif args.command == 'simulate':
+            run_simulation(
+                initial_sequence=args.sequence,
+                max_steps=args.steps,
+                initial_entropy=args.entropy,
+                output_csv=args.output
+            )
         else:
             parser.print_help()
 
