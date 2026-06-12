@@ -1,0 +1,3 @@
+# Description for GitHub repository
+
+A weaponized symbolic compression framework implementing CODEX 7-color token system, KAIROS adjacency enforcement, and t-god symbolic dynamics engine. Healing through hunting. 🌈⚡

@@ -13,8 +13,8 @@ setup(
     name="codex-compression",
     version="1.0.0",
     author="MUSHIKARATI",
-    author_email="",
-    description="A symbolic compression engine framework based on category theory and entropy minimization",
+    author_email="mushikarati@icloud.com",
+    description="A weaponized symbolic compression framework with KAIROS adjacency enforcement and t-god symbolic dynamics",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/MUSHIKARATI/CODEX",
@@ -44,6 +44,9 @@ setup(
             'flake8>=4.0',
             'mypy>=0.950',
         ],
+        'spectral': [
+            'numpy>=1.20',  # For spectral gray detection (optional)
+        ],
     },
     entry_points={
         'console_scripts': [
@@ -57,16 +60,22 @@ setup(
     zip_safe=False,
     keywords=[
         'compression',
-        'symbolic compression',
-        'category theory',
+        'symbolic-compression',
+        'codex',
+        'lzw',
         'entropy',
-        'data compression',
-        'lossless compression',
-        'mathematical compression',
+        'symbolic-dynamics',
+        'token-system',
+        'kairos',
+        'adjacency-law',
+        'gray-detection',
+        'mathematical-compression',
     ],
     project_urls={
-        'Bug Reports': 'https://github.com/MUSHIKARATI/CODEX/issues',
-        'Source': 'https://github.com/MUSHIKARATI/CODEX',
-        'Documentation': 'https://github.com/MUSHIKARATI/CODEX/blob/main/DEVELOPER_GUIDE.md',
+        'Documentation': 'https://github.com/mushikarati/CODEX/blob/main/docs/SYMBOLIC_DYNAMICS.md',
+        'Source': 'https://github.com/mushikarati/CODEX',
+        'Bug Reports': 'https://github.com/mushikarati/CODEX/issues',
+        'Contributing': 'https://github.com/mushikarati/CODEX/blob/main/CONTRIBUTING.md',
+        'DOI': 'https://doi.org/10.5281/zenodo.16096831',
     },
 )
