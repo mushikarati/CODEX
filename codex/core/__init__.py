@@ -1,8 +1,32 @@
 """
 CODEX Core Module
 
-Contains the symbolic dynamics engine and core operators.
+Contains the symbolic dynamics engine, core operators, and keychain specification.
 """
+
+from .keychain import (
+    # Phase definitions
+    Phase,
+    PHASE_ORDER,
+    PHASE_INDICES,
+    PHASE_ROLES,
+
+    # Constants
+    KernelConstants,
+    ThermodynamicConstants,
+
+    # Adjacency functions
+    is_adjacent,
+    get_next_phase,
+    validate_sequence,
+
+    # Canonical specs
+    CANONICAL_CYCLE,
+    REPAIR_KEYS,
+
+    # Full keychain
+    get_keychain,
+)
 
 from .symbolic_dynamics import (
     # Constants
@@ -41,7 +65,27 @@ from .symbolic_dynamics import (
 )
 
 __all__ = [
-    # Constants
+    # Keychain - Phase definitions
+    "Phase",
+    "PHASE_ORDER",
+    "PHASE_INDICES",
+    "PHASE_ROLES",
+
+    # Keychain - Constants
+    "KernelConstants",
+    "ThermodynamicConstants",
+
+    # Keychain - Functions
+    "is_adjacent",
+    "get_next_phase",
+    "validate_sequence",
+    "get_keychain",
+
+    # Keychain - Canonical specs
+    "CANONICAL_CYCLE",
+    "REPAIR_KEYS",
+
+    # Symbolic Dynamics - Constants
     "ALPHABET",
     "INDEX",
     "H_WARN",
@@ -49,13 +93,13 @@ __all__ = [
     "G_CRITICAL",
     "ETA",
 
-    # Utility functions
+    # Symbolic Dynamics - Utility functions
     "entropy_symbol",
     "bigram_entropy",
     "retention",
     "cosine_drift",
 
-    # Core operators
+    # Symbolic Dynamics - Core operators
     "F_forward",
     "rle_collapse",
     "adjacency_distance",
@@ -66,11 +110,11 @@ __all__ = [
     "grammar_induce",
     "compose_concat_normalize",
 
-    # Gray detection and repair
+    # Symbolic Dynamics - Gray detection and repair
     "gray_flag_check",
     "apply_torsion_cut",
 
-    # Simulation
+    # Symbolic Dynamics - Simulation
     "simulate",
     "write_csv",
     "demo",
